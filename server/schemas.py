@@ -17,6 +17,16 @@ class FormatProfileSchema(BaseModel):
     est_size: str
     codec: str
 
+class PlaylistEntrySchema(BaseModel):
+    index: int
+    id: str
+    title: str
+    duration: Optional[float] = None
+    duration_str: str = "Unknown"
+    thumbnail: Optional[str] = None
+    url: Optional[str] = None
+    uploader: Optional[str] = None
+
 class MediaInfoResponse(BaseModel):
     title: str
     url: str
@@ -32,6 +42,7 @@ class MediaInfoResponse(BaseModel):
     thumbnail: Optional[str] = None
     is_playlist: bool = False
     playlist_count: Optional[int] = None
+    playlist_entries: List[PlaylistEntrySchema] = []
     formats: List[FormatProfileSchema] = []
 
 class DownloadRequest(BaseModel):
@@ -40,6 +51,7 @@ class DownloadRequest(BaseModel):
     is_playlist: bool = False
     playlist_range: Optional[str] = None
     playlist_title: Optional[str] = None
+    selected_indices: Optional[List[int]] = None
 
 class DownloadFileInfo(BaseModel):
     filename: str

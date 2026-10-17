@@ -61,7 +61,8 @@ function App() {
   const handleStartDownload = async (
     formatId: number,
     isPlaylist: boolean,
-    playlistRange?: string
+    playlistRange?: string,
+    selectedIndices?: number[]
   ) => {
     if (!media) return;
 
@@ -79,7 +80,8 @@ function App() {
         formatId,
         isPlaylist,
         playlistRange,
-        isPlaylist ? media.title : undefined
+        isPlaylist ? media.title : undefined,
+        selectedIndices
       );
 
       // Initial progress dummy

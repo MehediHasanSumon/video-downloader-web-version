@@ -44,6 +44,7 @@ try:
         MediaInfoRequest,
         MediaInfoResponse,
         FormatProfileSchema,
+        PlaylistEntrySchema,
         DownloadRequest,
         JobStatusResponse,
         LibraryFileItem,
@@ -57,6 +58,7 @@ except ImportError:
         MediaInfoRequest,
         MediaInfoResponse,
         FormatProfileSchema,
+        PlaylistEntrySchema,
         DownloadRequest,
         JobStatusResponse,
         LibraryFileItem,
@@ -176,9 +178,45 @@ async def get_media_info(req: MediaInfoRequest):
                 thumbnail = thumbs[-1].get("url")
 
         playlist_count = None
+        playlist_entries: List[PlaylistEntrySchema] = []
         if is_playlist:
-            entries = list(info.get("entries") or [])
-            playlist_count = len(entries) if entries else info.get("playlist_count")
+            raw_entries = list(info.get("entries") or [])
+            playlist_count = len(raw_entries) if raw_entries else info.get("playlist_count")
+            for idx, entry in enumerate(raw_entries):
+                if not entry:
+                    continue
+                v_id = str(entry.get("id") or f"item_{idx + 1}")
+                v_title = entry.get("title") or f"Video {idx + 1}"
+                v_dur = entry.get("duration")
+                try:
+                    v_dur_float = float(v_dur) if v_dur is not None else None
+                except (ValueError, TypeError):
+                    v_dur_float = None
+
+                # Find best thumbnail
+                v_thumb = entry.get("thumbnail")
+                if not v_thumb and entry.get("thumbnails"):
+                    thumbs = entry.get("thumbnails")
+                    if isinstance(thumbs, list) and thumbs:
+                        v_thumb = thumbs[-1].get("url") or thumbs[0].get("url")
+                if not v_thumb and platform.key == "youtube" and entry.get("id"):
+                    v_thumb = f"https://i.ytimg.com/vi/{entry.get('id')}/hqdefault.jpg"
+
+                v_url = entry.get("url") or entry.get("webpage_url") or (f"https://www.youtube.com/watch?v={v_id}" if platform.key == "youtube" else url)
+                v_uploader = entry.get("uploader") or entry.get("channel") or None
+
+                playlist_entries.append(
+                    PlaylistEntrySchema(
+                        index=idx + 1,
+                        id=v_id,
+                        title=v_title,
+                        duration=v_dur_float,
+                        duration_str=Sanitizer.format_duration(v_dur_float),
+                        thumbnail=v_thumb,
+                        url=v_url,
+                        uploader=v_uploader,
+                    )
+                )
 
         # Build format options
         raw_profiles = SOCIAL_FORMAT_PROFILES if platform.key in ("facebook", "instagram", "tiktok", "twitter") else YOUTUBE_FORMAT_PROFILES
@@ -216,6 +254,7 @@ async def get_media_info(req: MediaInfoRequest):
             thumbnail=thumbnail,
             is_playlist=is_playlist,
             playlist_count=playlist_count,
+            playlist_entries=playlist_entries,
             formats=format_schemas,
         )
 
@@ -237,11 +276,17 @@ async def start_download(req: DownloadRequest):
     if not url:
         raise HTTPException(status_code=400, detail="URL cannot be empty")
 
+    playlist_range = req.playlist_range
+    if req.selected_indices:
+        sorted_indices = sorted(list(set(req.selected_indices)))
+        if sorted_indices:
+            playlist_range = ",".join(str(i) for i in sorted_indices)
+
     job_id = job_manager.create_job(
         url=url,
         format_id=req.format_id,
         is_playlist=req.is_playlist,
-        playlist_range=req.playlist_range,
+        playlist_range=playlist_range,
         playlist_title=req.playlist_title,
     )
     return {"job_id": job_id, "status": "queued"}

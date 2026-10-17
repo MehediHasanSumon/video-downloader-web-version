@@ -20,7 +20,8 @@ export async function startDownload(
   formatId: number,
   isPlaylist = false,
   playlistRange?: string,
-  playlistTitle?: string
+  playlistTitle?: string,
+  selectedIndices?: number[]
 ): Promise<{ job_id: string; status: string }> {
   const res = await fetch(`${API_BASE}/download`, {
     method: 'POST',
@@ -31,6 +32,7 @@ export async function startDownload(
       is_playlist: isPlaylist,
       playlist_range: playlistRange,
       playlist_title: playlistTitle,
+      selected_indices: selectedIndices,
     }),
   });
   if (!res.ok) {

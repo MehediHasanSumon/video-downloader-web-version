@@ -33,7 +33,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onFetch, isLoading }) => {
     { name: 'Facebook', color: '#60a4fa' },
     { name: 'Instagram', color: '#e778f9' },
     { name: 'TikTok', color: '#27d2ed' },
-    { name: 'Twitter / X', color: '#f3f4f6' },
+    { name: 'Twitter', color: '#f3f4f6' },
   ];
 
   return (

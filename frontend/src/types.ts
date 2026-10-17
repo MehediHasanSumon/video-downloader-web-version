@@ -10,6 +10,17 @@ export interface FormatProfile {
   codec: string;
 }
 
+export interface PlaylistEntry {
+  index: number;
+  id: string;
+  title: string;
+  duration?: number;
+  duration_str: string;
+  thumbnail?: string;
+  url?: string;
+  uploader?: string;
+}
+
 export interface MediaInfo {
   title: string;
   url: string;
@@ -25,6 +36,7 @@ export interface MediaInfo {
   thumbnail?: string;
   is_playlist: boolean;
   playlist_count?: number;
+  playlist_entries?: PlaylistEntry[];
   formats: FormatProfile[];
 }
 
