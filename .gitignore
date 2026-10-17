@@ -29,6 +29,9 @@ server/cookies.txt
 cookies.txt
 .env
 .env.local
+certs/
+*.key
+*.pem
 
 # Frontend node and build cache
 frontend/node_modules/
