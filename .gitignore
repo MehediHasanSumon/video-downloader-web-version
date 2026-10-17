@@ -1,0 +1,42 @@
+# Server runtime and virtual environments
+server/venv/
+venv/
+env/
+.venv/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary downloads and storage
+server/downloads/
+downloads/
+temp/
+*.part
+*.ytdl
+
+# Binaries & Archives
+server/ffmpeg/
+ffmpeg/
+*.zip
+*.tar.xz
+*.tar.gz
+*.tar
+
+# Logs and secrets
+server/*.log
+*.log
+server/cookies.txt
+cookies.txt
+.env
+.env.local
+
+# Frontend node and build cache
+frontend/node_modules/
+node_modules/
+frontend/.vite/
+frontend/dist/
+dist/
+
+# OS specific
+.DS_Store
+Thumbs.db

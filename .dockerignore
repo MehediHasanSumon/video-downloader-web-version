@@ -1,0 +1,28 @@
+# Version control
+.git
+.gitignore
+
+# Python runtime artifacts
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+server/venv/
+venv/
+*.log
+
+# Frontend build cache & dependencies
+frontend/node_modules/
+frontend/.vite/
+
+# Temporary media & downloads
+server/downloads/
+downloads/
+server/ffmpeg/
+ffmpeg/
+*.zip
+*.tar.*
+
+# Docker artifacts
+docker-compose*.override.yml

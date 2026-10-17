@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-[#0c0d12] text-[#f3f4f6] font-sans antialiased selection:bg-[#27d2ed]/30 selection:text-white min-h-screen;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="button"],
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  summary,
+  a {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  input:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #12131a;
+}
+::-webkit-scrollbar-thumb {
+  background: #232533;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #323549;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(39, 210, 237, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(39, 210, 237, 0.45);
+  }
+}
+
+.glow-cyan {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
